@@ -9,6 +9,7 @@ const body = core.getInput('BODY', {required: true, trimWhitespace: true}).split
 const org = core.getInput('ORG', {required: true, trimWhitespace: true})
 const repo = core.getInput('REPO', {required: true, trimWhitespace: true})
 const issueNumber = core.getInput('ISSUE_NUMBER', {required: true, trimWhitespace: true})
+const teamID = Number(core.getInput('TEAM_ID', {required: true, trimWhitespace: true}))
 const token = core.getInput('TOKEN', {required: true, trimWhitespace: true})
 
 const client = new _Octokit({
@@ -56,11 +57,14 @@ const client = new _Octokit({
             core.info(`User ${username} is not a member of ${org}`)
             core.info(`Inviting user ${username} to ${org}`)
             try {
+                const {data: user} = await client.users.getByUsername({
+                    username: username
+                })
                 await client.orgs.createInvitation({
                     org: org,
-                    role: 'member',
-                    invitee_id: username,
-                    team_ids: [3168439]
+                    role: 'direct_member',
+                    invitee_id: user.id,
+                    team_ids: [teamID]
                 })
             } catch (err) {
                 core.setFailed(err.message)

@@ -17,6 +17,9 @@ inputs:
   repo:
     description: The repo where the GitHub issue exists
     required: true
+  team_id:
+    description: The GitHub team ID
+    required: true
   token:
     description: GitHub Admin PAT to open issues and comment
     required: true
