@@ -1,0 +1,26 @@
+name: 'Invite Org Member'
+author: 'Brett Logan'
+description: 'A GitHub Issue slash command for inviting users to the current GitHub organization.'
+inputs:
+  body:
+    description: The body of the newly created issue
+    required: true
+    default: ${{ github.event.comment.body }}
+  issue_number:
+    description: The GitHub issue number
+    required: true
+    default: ${{ github.event.issue.number }}
+  org:
+    description: The GitHub org containing the repo
+    required: true
+    default: ${{ github.repository_owner }}
+  repo:
+    description: The repo where the GitHub issue exists
+    required: true
+  token:
+    description: GitHub Admin PAT to open issues and comment
+    required: true
+    default: ${{ github.token }}
+runs:
+  using: node16
+  main: dist/index.js
