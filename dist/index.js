@@ -10271,8 +10271,8 @@ const client = new _Octokit({
 });
 
 (async function () {
+    const username = body[body.length - 1]
     try {
-        const username = body[body.length - 1]
         core.info(`Checking if user ${username} is a member of ${org}`)
         const response = await client.orgs.checkMembershipForUser({
             org: org,
