@@ -10272,7 +10272,7 @@ const client = new _Octokit({
 });
 
 (async function () {
-    const username = body[body.length - 1]
+    let username = body[body.length - 1]
     try {
         core.info(`Checking if user ${username} is a member of ${org}`)
         const response = await client.orgs.checkMembershipForUser({
@@ -10299,15 +10299,28 @@ const client = new _Octokit({
             core.info(`User ${username} is not a member of ${org}`)
             core.info(`Inviting user ${username} to ${org}`)
             try {
-                const {data: user} = await client.users.getByUsername({
-                    username: username
-                })
-                await client.orgs.createInvitation({
-                    org: org,
-                    role: 'direct_member',
-                    invitee_id: user.id,
-                    team_ids: [teamID]
-                })
+                if (!username.includes('@') || username.startsWith('@')) {
+                    if (username.startsWith('@')) {
+                        username = username.replace('@', '')
+                    }
+                    const {data: user} = await client.users.getByUsername({
+                        username: username
+                    })
+                    await client.orgs.createInvitation({
+                        org: org,
+                        role: 'direct_member',
+                        invitee_id: user.id,
+                        team_ids: [teamID]
+                    })
+                } else {
+                    const email = username
+                    await client.orgs.createInvitation({
+                        org: org,
+                        role: 'direct_member',
+                        email: email,
+                        team_ids: [teamID]
+                    })
+                }
             } catch (err) {
                 core.setFailed(err.message)
                 await sendComment(`Failed to invite ${username} to ${org}: ${err.message}`)
