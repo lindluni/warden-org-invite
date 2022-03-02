@@ -10321,6 +10321,9 @@ const client = new _Octokit({
                         team_ids: [teamID]
                     })
                 }
+                console.log(`Invited ${username} to ${org}`)
+                await sendComment(`Invited ${username} to the ${org} organization`)
+                process.exit(0)
             } catch (err) {
                 core.setFailed(err.message)
                 await sendComment(`Failed to invite ${username} to ${org}: ${err.message}`)
