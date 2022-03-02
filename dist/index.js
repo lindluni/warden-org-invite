@@ -10271,11 +10271,10 @@ const client = new _Octokit({
 });
 
 (async function () {
-    let response
     try {
         const username = body[body.length - 1]
         core.info(`Checking if user ${username} is a member of ${org}`)
-        response = await client.orgs.checkMembershipForUser({
+        const response = await client.orgs.checkMembershipForUser({
             org: org,
             username: username
         })
@@ -10295,7 +10294,7 @@ const client = new _Octokit({
                 process.exit(1)
         }
     } catch (err) {
-        if (response.status === 404) {
+        if (err.status === 404) {
             core.info(`User ${username} is not a member of ${org}`)
             core.info(`Inviting user ${username} to ${org}`)
             try {
