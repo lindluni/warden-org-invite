@@ -10311,7 +10311,7 @@ const client = new _Octokit({
         }
     } catch (err) {
         await sendComment(`An error occurred while checking membership: ${err.message}`)
-        core.setFailed(error.message)
+        core.setFailed(err.message)
     }
 })()
 
